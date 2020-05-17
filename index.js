@@ -1,8 +1,10 @@
 const express = require("express");
+const cors = require("cors");
 const morgan = require("morgan");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 morgan.token("body", (request, response) => {
   return request.method.toUpperCase() === "POST"
@@ -100,5 +102,5 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT);
