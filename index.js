@@ -25,9 +25,15 @@ const persons = [
   },
 ];
 
-app.get("/", (request, response) => {
+app.get("/api/persons", (request, response) => {
   response.send(persons);
 });
+
+app.get("/info", (request, response) => {
+  const date = Date();
+  const numPersons = persons.length;
+  response.send(`<p>Phonebook as info for ${numPersons} people</p><p>${date}</p>`)
+})
 
 const PORT = 3001;
 app.listen(PORT);
