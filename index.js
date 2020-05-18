@@ -1,6 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const Person = require("./models/person");
 
 const app = express();
 
@@ -62,7 +64,13 @@ app.get("/info", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
-  response.send(persons);
+  Person.find({})
+    .then((persons) => {
+      response.send(persons);
+    })
+    .catch((error) => {
+      response.send([]);
+    });
 });
 
 app.get("/api/persons/:id", (request, response) => {
@@ -103,5 +111,5 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT);
