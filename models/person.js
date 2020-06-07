@@ -15,7 +15,7 @@ personSchema.set("toJSON", {
 
 const Person = mongoose.model("Person", personSchema);
 
-const connect = (password) => {
+const connect = () => {
   const url = process.env.MONGO_URL;
   mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 };
