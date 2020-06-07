@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-mongoose.set('useCreateIndex', true);
+mongoose.set("useCreateIndex", true);
 
 const personSchema = new mongoose.Schema({
   name: { type: String, minlength: 3, required: true, unique: true },
@@ -23,10 +23,6 @@ const Person = mongoose.model("Person", personSchema);
 const connect = () => {
   const url = process.env.MONGO_URL;
   mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-};
-
-const close = () => {
-  mongoose.connection.close();
 };
 
 connect();
