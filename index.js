@@ -19,16 +19,6 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-const checkValidNewPerson = (newPerson) => {
-  if (!newPerson.name) {
-    return "Person must have a name";
-  }
-  if (!newPerson.number) {
-    return "Person must have a number";
-  }
-  return "";
-};
-
 app.get("/info", (request, response) => {
   Person.find({})
     .then((persons) => {
@@ -68,15 +58,13 @@ app.get("/api/persons/:id", (request, response, next) => {
 app.post("/api/persons", (request, response, next) => {
   const newPerson = request.body;
 
-  const error = checkValidNewPerson(newPerson);
-  if (error) {
-    next(error);
-  } else {
-    const person = new Person(newPerson);
-    person.save().then((savedPerson) => {
+  const person = new Person(newPerson);
+  person
+    .save()
+    .then((savedPerson) => {
       response.json(savedPerson);
-    });
-  }
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (request, response, next) => {
@@ -96,7 +84,7 @@ app.put("/api/persons/:id", (request, response, next) => {
 
   const person = request.body;
 
-  Person.findByIdAndUpdate(id, person, { new: true })
+  Person.findByIdAndUpdate(id, person, { new: true, runValidators: true })
     .then((updatedPerson) => {
       response.send(updatedPerson);
     })
@@ -110,7 +98,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
-  response.status(400).send({ error: error }).end();
+  response.status(400).send({ error: error.message }).end();
 };
 
 app.use(errorHandler);
